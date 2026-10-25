@@ -1,0 +1,6 @@
+name: gcp-ephemeral-cloud-gaming
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Ephemeral Windows Server 2022 L4 Cloud Gaming Rig with Tailscale and Auto-Killswitch
