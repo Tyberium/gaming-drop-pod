@@ -1,0 +1,12 @@
+# Secrets and environment variables
+.env
+.env.*
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pulumi
+.pulumi/

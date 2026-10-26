@@ -2,13 +2,13 @@ import pulumi
 import pulumi_gcp as gcp
 
 # 1. Configuration
-config = pulumi.Config()
+config = pulumi.Config("gaming")
 gcp_config = pulumi.Config("gcp")
 
 project_id = gcp_config.require("project")
 region = gcp_config.get("region") or "europe-west1"
 zone = gcp_config.get("zone") or "europe-west1-b"
-billing_account = gcp_config.require("billingAccount")
+billing_account = config.require("billingAccount")
 
 disk_size = config.get_int("diskSize") or 220  # 220GB gives plenty of room for Windows + Aion 2
 max_spend_gbp = config.get_int("maxSpend") or 10
@@ -55,6 +55,10 @@ Log "Starting automated Cloud Gaming Rig configuration..."
 shutdown.exe /s /f /t {max_session_hours * 3600} /c "Scheduled safety shutdown ({max_session_hours}h limit). Run 'shutdown /a' in CMD to cancel."
 Log "Safety shutdown timer set for {max_session_hours} hours."
 
+# Disable Windows Update to prevent unexpected reboots during gaming
+Stop-Service wuauserv -Force -ErrorAction SilentlyContinue
+Set-Service wuauserv -StartupType Disabled -ErrorAction SilentlyContinue
+
 # 2. Install Tailscale & auto-join tailnet
 Log "Downloading and installing Tailscale..."
 Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest-amd64.msi" -OutFile "C:\\tailscale.msi"
@@ -73,7 +77,8 @@ Log "Installing Sunshine..."
 $sunshineRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/LizardByte/Sunshine/releases/latest"
 $installerAsset = $sunshineRelease.assets | Where-Object {{ $_.name -like "*windows-installer.exe" }} | Select-Object -First 1
 Invoke-WebRequest -Uri $installerAsset.browser_download_url -OutFile "C:\\sunshine-setup.exe"
-Start-Process -FilePath "C:\\sunshine-setup.exe" -ArgumentList "/S" -Wait
+Start-Process -FilePath "C:\\sunshine-setup.exe" -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART" -Wait
+Start-Service -Name "SunshineService" -ErrorAction SilentlyContinue
 
 # 5. Disable Windows Firewall on Tailscale interface so Moonlight pairs seamlessly
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
@@ -88,7 +93,7 @@ Log "NVIDIA GRID Driver installed."
 
 New-Item -ItemType File -Path "C:\\setup_complete.flag" -Force
 Log "Rebooting to activate GPU and Virtual Display..."
-Restart-Computer -Force
+shutdown.exe /r /t 5 /f
 """
 )
 

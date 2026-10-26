@@ -50,7 +50,7 @@ A zero-maintenance, on-demand Windows Server 2022 cloud gaming rig deployed on G
 
 ### 1. Clone and Initialize
 ```bash
-cd cloud-gaming-pc
+cd gaming-drop-pod
 pulumi login
 pulumi stack init gaming
 ```
@@ -64,7 +64,7 @@ gcloud auth application-default login
 ```bash
 # Required
 pulumi config set gcp:project YOUR_PROJECT_ID
-pulumi config set gcp:billingAccount YOUR_BILLING_ACCOUNT_ID
+pulumi config set gaming:billingAccount YOUR_BILLING_ACCOUNT_ID
 pulumi config set --secret gaming:tailscaleAuthKey tskey-auth-xxxxx
 
 # Optional (defaults shown)

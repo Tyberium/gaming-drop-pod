@@ -1,0 +1,12 @@
+config:
+  gcp:project: roboto-guilliman
+  gcp:region: europe-west1
+  gcp:zone: europe-west1-b
+  gaming:diskSize: "220"
+  gaming:maxSpend: "10"
+  gaming:maxSessionHours: "6"
+  gaming:billingAccount: 01ACB6-920C66-B01CAE
+  gaming:tailscaleAuthKey:
+    secure: AAABAEFwn1kLVlFougcCdXvFjpkxY3Cnl+9gpFsqY2gWAYirhtI1ZUk/tbCvMtk3CSKH2IhSRNsj3hWdkYH7XTf93UC7X5plOEORO6KjHTJZxIv/3oztzDvwM3n8
+  gcp:userProjectOverride: "true"
+  gcp:billingProject: roboto-guilliman
